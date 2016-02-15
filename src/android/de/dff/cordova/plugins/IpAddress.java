@@ -5,6 +5,8 @@ import java.net.*;
 import java.util.*;   
  
 import java.net.InetAddress;
+import java.net.Inet4Address;
+import java.net.Inet6Address;
 import java.net.NetworkInterface;
 import java.net.SocketException;
 import java.util.Enumeration;
@@ -18,8 +20,6 @@ import org.apache.cordova.PluginResult;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
- 
-import org.apache.http.conn.util.InetAddressUtils;
 
 import android.util.Log;
 
@@ -31,9 +31,8 @@ public class IpAddress extends CordovaPlugin {
  
 	@Override
     public boolean execute(String action, JSONArray args, final CallbackContext callbackContext) throws JSONException {
-    	try {		
-			String ipAddress = getIPAddress(true);
-			callbackContext.success(ipAddress);
+    	try {
+			callbackContext.success(getIPAddress());
             
             return true;
 		}
@@ -46,31 +45,45 @@ public class IpAddress extends CordovaPlugin {
     }
 
     /**
-     * Get IP-Address from first non-localhost interface
-     * @param useIPv4  true = return IPv4, false = return IPv6
-     * @return  Address or empty string
+     * Get All Networkinterfaces from device
+     * @return  JSONArray
      */
-    public static String getIPAddress(boolean useIPv4) throws Exception {
+    public static String getIPAddress() throws Exception {
+		JSONArray jsonInterfaces = new JSONArray();
+		JSONArray jsonAddresses;
+		JSONObject jsonAddress;
 		List<NetworkInterface> interfaces = Collections.list(NetworkInterface.getNetworkInterfaces());
 		for (NetworkInterface intf : interfaces) {
+			JSONObject jsonInterface = new JSONObject();
+			
+			jsonInterface.put("displayName", intf.getDisplayName());
+			jsonInterface.put("hardwareAddress", intf.getHardwareAddress());
+			jsonInterface.put("name", intf.getName());
+			
+			jsonAddresses = new JSONArray();			
 			List<InetAddress> addrs = Collections.list(intf.getInetAddresses());
+			
 			for (InetAddress addr : addrs) {
-				if (!addr.isLoopbackAddress()) {
+				if (!addr.isLoopbackAddress() && addr instanceof Inet4Address) {
+					jsonAddress = new JSONObject();
+					jsonAddress.put("hostName", addr.getHostAddress().toUpperCase(););
+					jsonAddress.put("isIPv4", true);
+					jsonAddresses.put(jsonAddress);
+				} 
+				else if (!addr.isLoopbackAddress() && addr instanceof Inet6Address){
+					jsonAddress = new JSONObject();
 					String sAddr = addr.getHostAddress().toUpperCase();
-					boolean isIPv4 = InetAddressUtils.isIPv4Address(sAddr); 
-					if (useIPv4) {
-						if (isIPv4) 
-							return sAddr;
-					} else {
-						if (!isIPv4) {
-							int delim = sAddr.indexOf('%'); 
-							return delim<0 ? sAddr : sAddr.substring(0, delim);
-						}
-					}
+					int delim = sAddr.indexOf('%');
+					jsonAddress.put("hostName", delim < 0 ? sAddr : sAddr.substring(0, delim));
+					jsonAddress.put("isIPv4", false);
+					jsonAddresses.put(jsonAddress);
 				}
 			}
+				
+			jsonInterface.put("addresses", jsonAddresses);
+			jsonInterfaces.put(jsonInterface);
 		}
-		throw new Exception("No Networkinterfaces or only LoopbackAddresses found.");		
-    }
+		return jsonInterfaces;
+	}
 }
 
