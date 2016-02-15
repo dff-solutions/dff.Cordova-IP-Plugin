@@ -48,7 +48,7 @@ public class IpAddress extends CordovaPlugin {
      * Get All Networkinterfaces from device
      * @return  JSONArray
      */
-    public static String getIPAddress() throws Exception {
+    public static JSONArray getIPAddress() throws Exception {
 		JSONArray jsonInterfaces = new JSONArray();
 		JSONArray jsonAddresses;
 		JSONObject jsonAddress;
