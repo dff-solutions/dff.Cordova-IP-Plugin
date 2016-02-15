@@ -66,7 +66,7 @@ public class IpAddress extends CordovaPlugin {
 			for (InetAddress addr : addrs) {
 				if (!addr.isLoopbackAddress() && addr instanceof Inet4Address) {
 					jsonAddress = new JSONObject();
-					jsonAddress.put("hostName", addr.getHostAddress().toUpperCase(););
+					jsonAddress.put("hostName", addr.getHostAddress().toUpperCase());
 					jsonAddress.put("isIPv4", true);
 					jsonAddresses.put(jsonAddress);
 				} 
