@@ -1,5 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<plugin id="dff-cordova-plugin-ipaddress" version="1.0.0" provider-name="dff">
+<plugin
+    xmlns="http://www.phonegap.com/ns/plugins/1.0"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    id="dff-cordova-plugin-ipaddress"
+    version="1.0.1">
+
     <name>IpAddress</name>
     <description>IP Address detection plugin</description>
     <license>Apache 2.0</license>
