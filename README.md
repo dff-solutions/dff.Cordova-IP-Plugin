@@ -34,3 +34,6 @@ IpAddress
     });
 
 ```
+
+## Documentation
+- <a href="https://dff-solutions.github.io/dff.Cordova-IP-Plugin/" target="_blank" >JAVA DOC</a>
