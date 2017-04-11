@@ -15,6 +15,8 @@
         <clobbers target="window.IpAddress"/>
     </js-module>
 
+    <dependency id="dff-cordova-plugin-common" url="https://github.com/dff-solutions/dff.CordovaPlugin.Common.git"/>
+
     <platform name="android">
         <config-file target="res/xml/config.xml" parent="/*">
             <feature name="IpAddress">
