@@ -1,10 +1,8 @@
 package de.dff.cordova.plugins;
 
 import android.Manifest;
-import android.content.pm.PackageManager;
-import android.util.Log;
+import com.dff.cordova.plugin.common.CommonPlugin;
 import org.apache.cordova.CallbackContext;
-import org.apache.cordova.CordovaPlugin;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -21,10 +19,9 @@ import java.util.List;
  *
  * @author dff
  */
-public class IpAddress extends CordovaPlugin {
+public class IpAddress extends CommonPlugin {
 
     private static final String TAG = "IpAddress";
-    private static final int PERMISSION_CODE = 0;
     private static final String[] PERMISSIONS =
         {
             Manifest.permission.INTERNET,
@@ -32,30 +29,16 @@ public class IpAddress extends CordovaPlugin {
             Manifest.permission.READ_PHONE_STATE
         };
 
+    private void requestPermissions() {
+        for (String permission : PERMISSIONS) {
+            CommonPlugin.addPermission(permission);
+        }
+    }
+
     @Override
-    public void onStart() {
-        super.onStart();
-        if (!cordova.hasPermission(PERMISSIONS[0])) {
-            getPermissions(PERMISSION_CODE);
-        } else if (!cordova.hasPermission(PERMISSIONS[1])) {
-            getPermissions(PERMISSION_CODE);
-        } else if (!cordova.hasPermission(PERMISSIONS[2])) {
-            getPermissions(PERMISSION_CODE);
-        }
-    }
-
-    private void getPermissions(int requestCode) {
-        cordova.requestPermissions(this, requestCode, PERMISSIONS);
-    }
-
-    public void onRequestPermissionResult(int requestCode, String[] permissions,
-                                          int[] grantResults) throws JSONException {
-        for (int r : grantResults) {
-            if (r == PackageManager.PERMISSION_DENIED) {
-                Log.e(TAG, "PERMISSIONS DENIED");
-                return;
-            }
-        }
+    public void pluginInitialize() {
+        super.pluginInitialize();
+        requestPermissions();
     }
 
     @Override
