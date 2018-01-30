@@ -3,8 +3,9 @@
     xmlns="http://www.phonegap.com/ns/plugins/1.0"
     xmlns:android="http://schemas.android.com/apk/res/android"
     id="dff-cordova-plugin-ipaddress"
-    spec="1.2.1"
-    version="1.2.1">
+    name="IpPlugin"
+    spec="1.2.2"
+    version="1.2.2">
 
     <name>IpAddress</name>
     <description>IP Address detection plugin</description>
